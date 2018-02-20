@@ -13,21 +13,11 @@ import com.example.android.pets.data.PetsContract.PetEntry;
 public class PetDbHelper extends SQLiteOpenHelper {
 
     public static final int DATABASE_VERSION = 1;
+
+    // database name
     public static final String DATABASE_NAME = "shelter.db";
 
-    private static final String TEXT_TYPE = " TEXT";
-    private static final String INTEGER_TYPE = " INTEGER";
     private static final String COMMA_SEP = ",";
-
-    // Create a String that contains the SQL statement to create the pets table
-    private static final String SQL_CREATE_ENTRIES =
-            "CREATE TABLE " + PetEntry.TABLE_NAME + " (" +
-                    PetEntry._ID + " INTEGER PRIMARY KEY," +
-                    PetEntry.COLUMN_PET_NAME + TEXT_TYPE + COMMA_SEP +
-                    PetEntry.COLUMN_PET_BREED + TEXT_TYPE + COMMA_SEP +
-                    PetEntry.COLUMN_PET_GENDER + INTEGER_TYPE + COMMA_SEP +
-                    PetEntry.COLUMN_PET_WEIGHT + INTEGER_TYPE +
-            " )";
 
     private static final String SQL_DELETE_ENTRIES =
             "DROP TABLE IF EXISTS " + PetEntry.TABLE_NAME;
@@ -38,7 +28,17 @@ public class PetDbHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL(SQL_CREATE_ENTRIES);
+        // Create a String that contains the SQL statement to create the pets table
+        String SQL_CREATE_PETS_TABLE =
+                "CREATE TABLE " + PetEntry.TABLE_NAME + " (" +
+                        PetEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT" + COMMA_SEP +
+                        PetEntry.COLUMN_PET_NAME + " TEXT NOT NULL" + COMMA_SEP +
+                        PetEntry.COLUMN_PET_BREED + " TEXT" + COMMA_SEP +
+                        PetEntry.COLUMN_PET_GENDER + " INTEGER NOT NULL" + COMMA_SEP +
+                        PetEntry.COLUMN_PET_WEIGHT + " INTEGER NOT NULL DEFAULT 0" +
+                        " )";
+
+        db.execSQL(SQL_CREATE_PETS_TABLE);
     }
 
     @Override

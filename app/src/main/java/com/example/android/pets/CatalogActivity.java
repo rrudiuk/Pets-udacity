@@ -30,8 +30,6 @@ import android.widget.TextView;
 import com.example.android.pets.data.PetDbHelper;
 import com.example.android.pets.data.PetsContract.PetEntry;
 
-import static android.R.attr.id;
-
 /**
  * Displays list of pets that were entered and stored in the app.
  */
@@ -91,7 +89,6 @@ public class CatalogActivity extends AppCompatActivity {
 
         // Create a new map of values, where column names are the keys
         ContentValues values = new ContentValues();
-        values.put(PetEntry._ID, id);
         values.put(PetEntry.COLUMN_PET_NAME, "Toto");
         values.put(PetEntry.COLUMN_PET_BREED, "Terrier");
         values.put(PetEntry.COLUMN_PET_GENDER, PetEntry.GENDER_MALE);

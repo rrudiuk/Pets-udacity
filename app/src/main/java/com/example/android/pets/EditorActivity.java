@@ -16,7 +16,7 @@
 package com.example.android.pets;
 
 import android.content.ContentValues;
-import android.database.sqlite.SQLiteDatabase;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
@@ -31,7 +31,6 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import com.example.android.pets.data.PetDbHelper;
 import com.example.android.pets.data.PetsContract.PetEntry;
 
 /**
@@ -117,12 +116,6 @@ public class EditorActivity extends AppCompatActivity {
         String weightString = mWeightEditText.getText().toString().trim();
         int weightInt = Integer.parseInt(weightString);
 
-        // Create database helper
-        PetDbHelper mDbHelper = new PetDbHelper(this);
-
-        // Gets the data repository in write mode
-        SQLiteDatabase db = mDbHelper.getWritableDatabase();
-
         // Create a new map of values, where column names are the keys and variables are values
         ContentValues values = new ContentValues();
         values.put(PetEntry.COLUMN_PET_NAME, nameString);
@@ -130,15 +123,15 @@ public class EditorActivity extends AppCompatActivity {
         values.put(PetEntry.COLUMN_PET_GENDER, mGender);
         values.put(PetEntry.COLUMN_PET_WEIGHT, weightInt);
 
-        // Insert the new row, returning the primary key value of the new row
-        long newRowId = db.insert(PetEntry.TABLE_NAME, null, values);
+        // Insert the new row, returning its Uri
+        Uri newUri = getContentResolver().insert(PetEntry.CONTENT_URI, values);
 
-        Log.v("EditorActivity", "New Row Id" + newRowId);
+        Log.v("EditorActivity", "Pet inserted");
 
-        if (newRowId == -1) {
-            Toast.makeText(this, "Error adding the pet", Toast.LENGTH_SHORT).show();
+        if (newUri != null) {
+            Toast.makeText(this, R.string.pet_added, Toast.LENGTH_SHORT).show();
         } else {
-            Toast.makeText(this, "Pet was added with id " + newRowId, Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.pet_not_added, Toast.LENGTH_SHORT).show();
         }
 
     }

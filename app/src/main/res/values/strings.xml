@@ -58,4 +58,10 @@
 
     <!-- Label for dropdown menu option if the pet is female [CHAR LIMIT=20] -->
     <string name="gender_female">Female</string>
+
+    <!-- Toast that appears if a pet was succesfully added -->
+    <string name="pet_added">Pet added</string>
+
+    <!-- Toast that appears if wasn't succesfully added -->
+    <string name="pet_not_added">Pet added</string>
 </resources>

@@ -18,7 +18,7 @@ package com.example.android.pets;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
@@ -71,9 +71,6 @@ public class CatalogActivity extends AppCompatActivity {
      */
     public void displayDatabaseInfo() {
 
-        // Create and/or open a database to read from it
-        SQLiteDatabase db = mDbHelper.getReadableDatabase();
-
         // Define a projection that specifies which columns from the database
         // you will use after this query.
         String[] projection = {
@@ -84,14 +81,13 @@ public class CatalogActivity extends AppCompatActivity {
                 PetEntry.COLUMN_PET_WEIGHT
         };
 
-        Cursor cursor = db.query(
-                PetEntry.TABLE_NAME,  // The table to query
-                projection,                               // The columns to return
-                null,                                   // The columns for the WHERE clause
-                null,                                   // The values for the WHERE clause
-                null,                                     // don't group the rows
-                null,                                     // don't filter by row groups
-                null                                    // The sort order
+        /* Prform a query to ContentProvider using ContentResolver */
+        Cursor cursor = getContentResolver().query(
+                PetEntry.CONTENT_URI,               // Uri of the table
+                projection,                         // The columns to return
+                null,                               // Selection criteria
+                null,                               // Selection value
+                null                                // Sort order of the returned values
         );
 
         TextView displayView = (TextView) findViewById(R.id.text_view_pet);
@@ -142,9 +138,6 @@ public class CatalogActivity extends AppCompatActivity {
 
     private void insertPet() {
 
-        // Gets the data repository in write mode
-        SQLiteDatabase db = mDbHelper.getWritableDatabase();
-
         // Create a new map of values, where column names are the keys
         ContentValues values = new ContentValues();
         values.put(PetEntry.COLUMN_PET_NAME, "Toto");
@@ -152,10 +145,10 @@ public class CatalogActivity extends AppCompatActivity {
         values.put(PetEntry.COLUMN_PET_GENDER, PetEntry.GENDER_MALE);
         values.put(PetEntry.COLUMN_PET_WEIGHT, 7);
 
-        // Insert the new row, returning the primary key value of the new row
-        long newRowId = db.insert(PetEntry.TABLE_NAME, null, values);
+        // Insert the new row, returning its Uri
+        Uri newUri = getContentResolver().insert(PetEntry.CONTENT_URI, values);
 
-        Log.v("CatalogActivity", "New Row Id" + newRowId);
+        Log.v("CatalogActivity", "Dummy data inserted");
 
     }
 

@@ -16,6 +16,7 @@
 package com.example.android.pets;
 
 import android.app.LoaderManager;
+import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.CursorLoader;
 import android.content.Intent;
@@ -29,6 +30,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.example.android.pets.data.PetsContract.PetEntry;
@@ -53,6 +55,7 @@ public class CatalogActivity extends AppCompatActivity implements LoaderManager.
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                // create a new intent to open EditorActivity
                 Intent intent = new Intent(CatalogActivity.this, EditorActivity.class);
                 startActivity(intent);
             }
@@ -69,6 +72,29 @@ public class CatalogActivity extends AppCompatActivity implements LoaderManager.
         // there is no pet data yet, so we pass in null
         mCursorAdapter = new PetCursorAdapter(this, null);
         petListView.setAdapter(mCursorAdapter);
+
+        petListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                // create a new intent to open EditorActivity
+                Intent intent = new Intent(CatalogActivity.this, EditorActivity.class);
+                /**
+                 * Form the content Uri that represent the specific pet that was clicked on,
+                 * by appending id (passed as input to the method) onto the
+                 * {@link PetEntry#CONTENT_URI}.
+                 * For example, content Uri would be "content://com.example.android.pets/pets/2"
+                 * if the pet with ID 2 was clicked on
+                 * */
+                Uri currentPetUri = ContentUris.withAppendedId(PetEntry.CONTENT_URI, id);
+                Log.v("Send intent", "" + currentPetUri);
+
+                // Set Uri to the data field of the intent
+                intent.setData(currentPetUri);
+
+                // Launch {@link EditorActivity} to display the data for current pet
+                startActivity(intent);
+            }
+        });
 
         // initialize loader
         getLoaderManager().restartLoader(LOADER_ID, null, this);

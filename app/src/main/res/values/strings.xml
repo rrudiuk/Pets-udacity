@@ -66,7 +66,13 @@
     <string name="pet_added">Pet added</string>
 
     <!-- Toast that appears if wasn't succesfully added -->
-    <string name="pet_not_added">Pet added</string>
+    <string name="pet_not_added">Error adding the pet</string>
+
+    <!-- Toast that appears if a pet was succesfully updated -->
+    <string name="pet_updated">Pet updated</string>
+
+    <!-- Toast that appears if wasn't succesfully updated -->
+    <string name="pet_not_updated">Error updating the pet</string>
 
     <!-- Title text for the empty view, which describes the empty dog house image [CHAR LIMIT=50] -->
     <string name="empty_view_title_text">It\'s a bit lonely here...</string>

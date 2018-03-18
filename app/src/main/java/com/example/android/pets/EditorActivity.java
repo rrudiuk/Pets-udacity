@@ -27,7 +27,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -40,6 +39,8 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.example.android.pets.data.PetsContract.PetEntry;
+
+import static android.text.TextUtils.isEmpty;
 
 /**
  * Allows user to create a new pet or edit an existing one.
@@ -133,7 +134,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 String selection = (String) parent.getItemAtPosition(position);
-                if (!TextUtils.isEmpty(selection)) {
+                if (!isEmpty(selection)) {
                     if (selection.equals(getString(R.string.gender_male))) {
                         mGender = PetEntry.GENDER_MALE; // Male
                     } else if (selection.equals(getString(R.string.gender_female))) {
@@ -214,7 +215,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
 
     private boolean isEmptyValues(String name, String breed) {
 
-        if (TextUtils.isEmpty(name) || TextUtils.isEmpty(breed) || mGender == PetEntry.GENDER_UNKNOWN) {
+        if (isEmpty(name) || isEmpty(breed) || mGender == PetEntry.GENDER_UNKNOWN) {
             return true;
         }
 
@@ -227,17 +228,18 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         String nameString = mNameEditText.getText().toString().trim();
         String breedString = mBreedEditText.getText().toString().trim();
         String weightString = mWeightEditText.getText().toString().trim();
-        int weightInt = 0;
-        if (!TextUtils.isEmpty(weightString)) {
-            weightInt = Integer.parseInt(weightString);
+
+        if (mCurrentPetUri == null &&
+                isEmpty(nameString) && isEmpty(breedString) &&
+                isEmpty(weightString) && mGender == PetEntry.GENDER_UNKNOWN) {
+            return;
         }
 
-        if (isEmptyValues(nameString, breedString) && mCurrentPetUri == null) {
-            Toast.makeText(this, R.string.pet_not_added, Toast.LENGTH_SHORT).show();
-            return;
-        } else if (isEmptyValues(nameString, breedString) && mCurrentPetUri != null) {
-            Toast.makeText(this, R.string.pet_not_updated, Toast.LENGTH_SHORT).show();
-            return;
+        // If the weight is not provided by the user, don't try to parse the string into an
+        // integer value. Use 0 by default
+        int weightInt = 0;
+        if (!isEmpty(weightString)) {
+            weightInt = Integer.parseInt(weightString);
         }
 
         // Create a new map of values, where column names are the keys and variables are values
